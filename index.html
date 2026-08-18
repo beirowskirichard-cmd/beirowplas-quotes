@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b3d2e" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Beirowplas" />
+<title>Beirowplas Quotes</title>
+<style>
+:root {
+  --bg: #071912;
+  --card: #0f2c22;
+  --card2: #14362b;
+  --line: #1f4a3a;
+  --text: #e8f5ef;
+  --muted: #9bb8ab;
+  --accent: #2ecc71;
+  --gold: #d4af37;
+  --warn: #e67e22;
+  --bad: #e74c3c;
+  --ok: #27ae60;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { padding-bottom: 84px; }
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: linear-gradient(180deg, #0b3d2e, #0a2e23);
+  padding: 14px 16px 12px; border-bottom: 1px solid var(--line);
+}
+header h1 { margin: 0; font-size: 18px; letter-spacing: .3px; }
+header p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.wrap { padding: 14px 14px 0; }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 14px; margin-bottom: 12px;
+}
+label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+input, select, textarea {
+  width: 100%; background: #0a211a; color: var(--text);
+  border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; font-size: 16px;
+}
+textarea { min-height: 70px; resize: vertical; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn {
+  width: 100%; border: 0; border-radius: 12px; padding: 13px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+}
+.btn-main { background: var(--accent); color: #062016; }
+.btn-ghost { background: var(--card2); color: var(--text); border: 1px solid var(--line); }
+.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.kpi div { background: var(--card2); border-radius: 12px; padding: 12px; }
+.kpi span { display: block; font-size: 11px; color: var(--muted); }
+.kpi b { font-size: 20px; }
+.profit { color: var(--ok); }
+.loss { color: var(--bad); }
+.table { width: 100%; font-size: 13px; border-collapse: collapse; }
+.table td { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.table td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.quote-list { display: flex; flex-direction: column; gap: 8px; }
+.qitem { background: var(--card2); border-radius: 12px; padding: 10px 12px; }
+.qitem h3 { margin: 0 0 4px; font-size: 14px; }
+.qitem small { color: var(--muted); }
+nav {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  background: #0a2a20; border-top: 1px solid var(--line);
+}
+nav button {
+  background: none; border: 0; color: var(--muted); padding: 12px 8px 16px; font-size: 12px;
+}
+nav button.active { color: var(--accent); font-weight: 700; }
+.hidden { display: none; }
+.badge { display: inline-block; background: #1a4d38; color: var(--gold); font-size: 11px; padding: 2px 8px; border-radius: 99px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Beirowplas Quotes</h1>
+  <p>True cost • diesel separate • WhatsApp ready</p>
+</header>
+<div id="page-quote" class="wrap">
+  <div class="card">
+    <span class="badge">New quote</span>
+    <label>Client</label>
+    <input id="client" placeholder="e.g. RCL / Rainbow" />
+    <label>Job type</label>
+    <select id="zone">
+      <option value="cape">Cape Town radius (R1900 + surcharge)</option>
+      <option value="distance">Distance-based (Worcester / other)</option>
+    </select>
+    <div class="row">
+      <div>
+        <label>Load type</label>
+        <select id="load">
+          <option value="general">General waste</option>
+          <option value="recycling">Recycling</option>
+          <option value="mortality">Mortality</option>
+        </select>
+      </div>
+      <div>
+        <label>Diesel R/L</label>
+        <input id="diesel" type="number" step="0.01" value="31.50" />
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Hours (drive + 1h handling)</label>
+        <input id="hours" type="number" step="0.1" value="4" />
+      </div>
+      <div>
+        <label>Round-trip km</label>
+        <input id="km" type="number" step="1" value="80" />
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>CT surcharge (R)</label>
+        <input id="surcharge" type="number" step="1" value="550" />
+      </div>
+      <div>
+        <label>Charge client (R) — 0 = auto</label>
+        <input id="charge" type="number" step="1" value="0" />
+      </div>
+    </div>
+    <label>Notes</label>
+    <textarea id="notes" placeholder="Pickup, skip, extra waiting..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-main" onclick="calc(true)">Save quote</button>
+      <button class="btn btn-ghost" onclick="calc(false)">Calculate</button>
+    </div>
+  </div>
+  <div class="card" id="result">
+    <div class="kpi">
+      <div><span>Company cost (excl diesel)</span><b id="kCost">R 0</b></div>
+      <div><span>Diesel (pass-through)</span><b id="kDiesel">R 0</b></div>
+      <div><span>Charge client</span><b id="kRev">R 0</b></div>
+      <div><span>Profit / margin</span><b id="kProfit">R 0</b></div>
+    </div>
+    <table class="table" id="breakdown"></table>
+    <div class="btn-row">
+      <button class="btn btn-main" onclick="whatsapp()">WhatsApp quote</button>
+      <button class="btn btn-ghost" onclick="copyMsg()">Copy text</button>
+    </div>
+  </div>
+</div>
+<div id="page-jobs" class="wrap hidden">
+  <div class="card">
+    <h2 style="margin:0 0 10px;font-size:16px">Saved quotes</h2>
+    <div id="jobs" class="quote-list"></div>
+  </div>
+</div>
+<div id="page-set" class="wrap hidden">
+  <div class="card">
+    <h2 style="margin:0 0 10px;font-size:16px">Rates</h2>
+    <div class="row">
+      <div><label>Driver R/hr</label><input id="sDriver" type="number" value="87.5" /></div>
+      <div><label>Achterrijder R/hr</label><input id="sHelper" type="number" value="37.5" /></div>
+    </div>
+    <div class="row">
+      <div><label>CT base (R)</label><input id="sBase" type="number" value="1900" /></div>
+      <div><label>Other / load (R)</label><input id="sOther" type="number" value="150" /></div>
+    </div>
+    <div class="row">
+      <div><label>Service R/km</label><input id="sServ" type="number" value="2" /></div>
+      <div><label>Tires R/km</label><input id="sTire" type="number" value="1.07" /></div>
+    </div>
+    <div class="row">
+      <div><label>km/L (truck)</label><input id="sKpl" type="number" step="0.1" value="1.9" /></div>
+      <div><label>Fixed / hour (R)</label><input id="sFixed" type="number" value="85" /></div>
+    </div>
+    <p style="font-size:12px;color:var(--muted)">Fixed/hour ≈ truck instalment + insurance + licensing + yard, prorated. Diesel is never marked up unless you change the charge.</p>
+    <button class="btn btn-main" onclick="saveSettings()">Save rates</button>
+  </div>
+</div>
+<nav>
+  <button class="active" onclick="show('quote', this)">Quote</button>
+  <button onclick="show('jobs', this)">Jobs</button>
+  <button onclick="show('set', this)">Rates</button>
+</nav>
+<script>
+const KEY_Q = 'bp_quotes_v1';
+const KEY_S = 'bp_settings_v1';
+function money(n){ return 'R ' + (Math.round(n)||0).toLocaleString('en-ZA'); }
+function num(id){ return parseFloat(document.getElementById(id).value) || 0; }
+function val(id){ return document.getElementById(id).value; }
+function storeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function storeSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+function settings(){
+  const d = { driver:87.5, helper:37.5, base:1900, other:150, serv:2, tire:1.07, kpl:1.9, fixed:85 };
+  try { return Object.assign(d, JSON.parse(storeGet(KEY_S)||'{}')); } catch(e){ return d; }
+}
+function loadSettings(){
+  const s = settings();
+  document.getElementById('sDriver').value=s.driver;
+  document.getElementById('sHelper').value=s.helper;
+  document.getElementById('sBase').value=s.base;
+  document.getElementById('sOther').value=s.other;
+  document.getElementById('sServ').value=s.serv;
+  document.getElementById('sTire').value=s.tire;
+  document.getElementById('sKpl').value=s.kpl;
+  document.getElementById('sFixed').value=s.fixed;
+}
+function saveSettings(){
+  const s = { driver:num('sDriver'), helper:num('sHelper'), base:num('sBase'), other:num('sOther'), serv:num('sServ'), tire:num('sTire'), kpl:num('sKpl'), fixed:num('sFixed') };
+  storeSet(KEY_S, JSON.stringify(s));
+  alert('Rates saved on this phone.');
+}
+function mult(){
+  const t = val('load');
+  if (t==='mortality') return 1.08;
+  if (t==='recycling') return 0.95;
+  return 1;
+}
+function compute(){
+  const s = settings();
+  const hours = num('hours');
+  const km = num('km');
+  const diesel = num('diesel');
+  const m = mult();
+  const labor = (s.driver + s.helper) * hours;
+  const kmCost = (s.serv + s.tire) * km;
+  const fixed = s.fixed * hours;
+  const other = s.other;
+  const company = (labor + kmCost + fixed + other) * m;
+  const litres = (km / (s.kpl || 1.9)) * (val('load')==='mortality' ? 1.08 : 1);
+  const dieselR = litres * diesel;
+  let charge = num('charge');
+  if (!charge){
+    if (val('zone')==='cape') charge = s.base + num('surcharge') + dieselR;
+    else charge = company + dieselR + (company * 0.30);
+  }
+  const profit = charge - company - dieselR;
+  const margin = charge ? (profit / charge) * 100 : 0;
+  return { hours, km, diesel, labour:labor*m, kmCost:kmCost*m, fixed:fixed*m, other:other*m, company, litres, dieselR, charge, profit, margin };
+}
+let last = null;
+function calc(save){
+  last = compute();
+  document.getElementById('kCost').textContent = money(last.company);
+  document.getElementById('kDiesel').textContent = money(last.dieselR);
+  document.getElementById('kRev').textContent = money(last.charge);
+  const kp = document.getElementById('kProfit');
+  kp.textContent = money(last.profit) + ' · ' + last.margin.toFixed(0) + '%';
+  kp.className = last.profit >= 0 ? 'profit' : 'loss';
+  document.getElementById('breakdown').innerHTML =
+    '<tr><td>Labour (driver + achterrijder)</td><td>'+money(last.labour)+'</td></tr>' +
+    '<tr><td>Service + tyres</td><td>'+money(last.kmCost)+'</td></tr>' +
+    '<tr><td>Fixed truck (prorated)</td><td>'+money(last.fixed)+'</td></tr>' +
+    '<tr><td>Other / load</td><td>'+money(last.other)+'</td></tr>' +
+    '<tr><td>Diesel '+last.litres.toFixed(1)+' L @ R'+last.diesel.toFixed(2)+'</td><td>'+money(last.dieselR)+'</td></tr>';
+  if (save){
+    const q = { id: Date.now(), client: val('client') || 'Unnamed', zone: val('zone'), load: val('load'), notes: val('notes'), ...last, at: new Date().toLocaleString('en-ZA') };
+    const all = quotes(); all.unshift(q);
+    storeSet(KEY_Q, JSON.stringify(all.slice(0,80)));
+    renderJobs();
+    alert('Quote saved.');
+  }
+}
+function quotes(){ try { return JSON.parse(storeGet(KEY_Q)||'[]'); } catch(e){ return []; } }
+function renderJobs(){
+  const all = quotes();
+  document.getElementById('jobs').innerHTML = all.length ? all.map(q =>
+    '<div class="qitem"><h3>'+q.client+' · '+money(q.charge)+'</h3><small>'+q.at+' · '+q.load+' · profit '+money(q.profit)+' ('+(q.margin||0).toFixed(0)+'%)</small><div class="btn-row"><button class="btn btn-ghost" onclick="delQ('+q.id+')">Delete</button><button class="btn btn-main" onclick="waSaved('+q.id+')">WhatsApp</button></div></div>'
+  ).join('') : '<p style="color:var(--muted)">No quotes yet.</p>';
+}
+function delQ(id){
+  storeSet(KEY_Q, JSON.stringify(quotes().filter(q=>q.id!==id)));
+  renderJobs();
+}
+function msgFrom(q){
+  return '*Beirowplas Recycling Quote*\nClient: '+(q.client||val('client')||'-')+'\nLoad: '+(q.load||val('load'))+'\nHours: '+q.hours+' · km: '+q.km+'\nDiesel: '+money(q.dieselR)+' (pass-through)\nTotal: *'+money(q.charge)+'*\n'+(q.notes ? 'Notes: '+q.notes+'\n' : '')+'\nThank you.\nBeirowplas Recycling';
+}
+function whatsapp(){ if(!last) calc(false); window.open('https://wa.me/?text='+encodeURIComponent(msgFrom(last))); }
+function copyMsg(){ if(!last) calc(false); navigator.clipboard.writeText(msgFrom(last)); alert('Copied.'); }
+function waSaved(id){
+  const q = quotes().find(x=>x.id===id); if(!q) return;
+  window.open('https://wa.me/?text='+encodeURIComponent(msgFrom(q)));
+}
+function show(name, btn){
+  ['quote','jobs','set'].forEach(n=>{
+    document.getElementById('page-'+n).classList.toggle('hidden', n!==name);
+  });
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(name==='jobs') renderJobs();
+  if(name==='set') loadSettings();
+}
+try { loadSettings(); calc(false); renderJobs(); } catch(e) {
+  document.body.insertAdjacentHTML('afterbegin', '<div style="background:#8b1e1e;color:#fff;padding:12px">Error: '+e.message+'</div>');
+}
+</script>
+</body>
+</html>
