@@ -1,0 +1,16 @@
+{
+  "users": [
+    {"id": 1, "name": "Richard", "role": "manager", "pin": "1234"},
+    {"id": 2, "name": "Office admin", "role": "admin", "pin": "1234"},
+    {"id": 3, "name": "Logistics", "role": "logistics", "pin": "1234"},
+    {"id": 4, "name": "Driver 1", "role": "driver", "pin": "1234"},
+    {"id": 5, "name": "Mechanic", "role": "mechanic", "pin": "1234"}
+  ],
+  "trucks": [
+    {"id": 11, "name": "FAW 1", "reg": "CA 000-000", "status": "ok", "km": 182000, "nextService": 190000},
+    {"id": 12, "name": "FAW 2", "reg": "CA 111-111", "status": "ok", "km": 210000, "nextService": 210000}
+  ],
+  "jobs": [],
+  "work": [],
+  "updated": 0
+}
